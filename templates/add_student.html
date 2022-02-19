@@ -4,6 +4,7 @@
 
     <h1>Add student</h1>
     <form action="" method="post">
+    {{ form.hidden_tag() }}  <!-- подключение secret_key -->
         <p>
             {{ form.name.label }}
             {{ form.name }}
