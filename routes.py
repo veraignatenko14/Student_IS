@@ -50,16 +50,13 @@ def update_student(id):
     """
     students = Students.query.get_or_404(id)  # если id студента не будет найден в БД, вылетит ошибка 404
     form = StudentForm()
-    if form.validate_on_submit():
-        student = Students(
-            name=form.name.data,
-            birth_date=form.birth_date.data,
-            mark=form.mark.data,
-            status=form.status.data
-        )
+    if form.validate_on_submit():  # когда форма отправляется
+        students.name = form.name.data  # изменить старое имя студента на значение из поля name формы
+        students.birth_date = form.birth_date.data
+        students.mark = form.mark.data
+        students.status = form.status.data
         try:
-            db.session.add(student)
-            db.session.commit()
+            db.session.commit()  # обновляю данные в базе
         except:
             return 'There was a problem updating data.'
         return redirect(url_for('add_student'))
