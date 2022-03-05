@@ -64,6 +64,17 @@ def update_student(id):
         return render_template('update-student.html', form=form, student=students)
 
 
+@app.route('/delete/<int:id>')
+def delete_student(id):
+    student = Students.query.get_or_404(id)  # нахожу id студента в базе
+    try:
+        db.session.delete(student)  # удаляю студента из БД
+        db.session.commit()
+        return redirect(url_for('add_student'))
+    except:
+        return 'There was a problem deleting student'
+
+
 @app.errorhandler(404)  # обработчик ошибки 404
 def error_404(error):
     return render_template('404.html'), 404
