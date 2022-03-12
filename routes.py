@@ -79,6 +79,17 @@ def delete_student(id):
         return 'There was a problem deleting student'
 
 
+@app.route('/delete-subj/<int:id>')
+def delete_subject(id):
+    subject = Subjects.query.get_or_404(id)  # нахожу id студента в базе
+    try:
+        db.session.delete(subject)  # удаляю студента из БД
+        db.session.commit()
+        return redirect(url_for('add_subject'))
+    except:
+        return 'There was a problem deleting student'
+
+
 @app.errorhandler(404)  # обработчик ошибки 404
 def error_404(error):
     return render_template('404.html'), 404
