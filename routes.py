@@ -12,6 +12,7 @@ def index():
 @app.route('/add-student', methods=['GET', 'POST'])
 def add_student():
     form = StudentForm()
+    form.subject.choices = [(1, 'First'), (2, 'Second')]
     students = Students.query.all()  # достаю всех студентов из БД
     if form.validate_on_submit():
         student = Students(

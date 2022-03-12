@@ -9,7 +9,7 @@ class StudentForm(FlaskForm):
     birth_date = DateField('Birth date: ',
                            validators=[DataRequired()])
     mark = FloatField('Mark: ')
-    # TODO: SelectMultipleField for subject_id field
+    subject = SelectField('Subject', choices=[])
     status = SelectField('Learning status',
                          choices=[
                              ('free', 'Free'),
