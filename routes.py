@@ -19,6 +19,7 @@ def add_student():
             name=form.name.data,
             birth_date=form.birth_date.data,
             mark=form.mark.data,
+            subject_id=form.subject.data,  # я достаю из тега option значение, которое хранится в атрибуте value (id предмета из базы даных)
             status=form.status.data
         )
         db.session.add(student)
