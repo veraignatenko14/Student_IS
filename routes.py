@@ -52,10 +52,12 @@ def update_student(id):
     """
     students = Students.query.get_or_404(id)  # если id студента не будет найден в БД, вылетит ошибка 404
     form = StudentForm()
+    form.subject.choices = [(subject.id, subject.name) for subject in Subjects.query.order_by(Subjects.name).all()]
     if form.validate_on_submit():  # когда форма отправляется
         students.name = form.name.data  # изменить старое имя студента на значение из поля name формы
         students.birth_date = form.birth_date.data
         students.mark = form.mark.data
+        students.subject_id = form.subject.data
         students.status = form.status.data
         try:
             db.session.commit()  # обновляю данные в базе
