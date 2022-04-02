@@ -1,7 +1,8 @@
 from flask import render_template, redirect, url_for
 from app import app, db, login
-from forms import StudentForm, SubjectForm
+from forms import StudentForm, SubjectForm, LoginForm
 from models import Subjects, Students, User
+from flask_login import current_user, login_user, logout_user, login_required
 
 
 @login.user_loader
@@ -14,6 +15,7 @@ def index():
 
 
 @app.route('/add-student', methods=['GET', 'POST'])
+@login_required
 def add_student():
     form = StudentForm()
     form.subject.choices = [(subject.id, subject.name) for subject in Subjects.query.order_by(Subjects.name).all()]  # SELECT * FROM subjects ORDER BY name
@@ -97,3 +99,21 @@ def delete_subject(id):
 @app.errorhandler(404)  # обработчик ошибки 404
 def error_404(error):
     return render_template('404.html'), 404
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if current_user.is_authenticated:  # если пользователь уже вошел на сайт
+        return redirect(url_for('index'))  # переместить его на главную
+    form = LoginForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(username=form.username.data).first()  # первый пользователь, найденный в базе по юзернейму из формы
+        if user is None or not user.check_password(form.password.data):
+            return redirect(url_for('login'))
+        login_user(user, remember=form.remember_me.data)
+        return redirect(url_for('index'))
+    return render_template('login.html', form=form)
+
+@app.route('/logout')
+def logout():
+    logout_user()
+    return redirect(url_for('index'))
